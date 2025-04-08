@@ -1,11 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class test {
+public class interfaceCryptage {
+
     public static void main(String[] args) {
+        
         JFrame frame = new JFrame("Cryptage");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 600);
@@ -126,14 +130,14 @@ public class test {
 
             jbCrypte.addActionListener(e -> {
                 String texteACrypter = zoneTxtACrypter.getText();
-                
-                String resultat=cryptage.CryptageAvecDeck(texteACrypter,stringToDeck(zoneDeck.getText()));
+                int[] clef=cryptage.genClef(texteACrypter, traducteur.stringToDeck(zoneDeck.getText()));
+                jtfCle.setText(traducteur.deckToString(clef));
+                String resultat=cryptage.CryptageAvecDeck(texteACrypter,traducteur.stringToDeck(zoneDeck.getText()),traducteur.stringToDeck(jtfCle.getText()));
                 zoneTxtMotCrypter.setText(resultat);
             });
             jbDecrypte.addActionListener(e -> {
                 String texteADecrypter = zoneTxtMotADecrypter.getText();
-                
-                String resultat=cryptage.DecryptageAvecDeck(texteADecrypter,stringToDeck(zoneDeck.getText()));
+                String resultat=cryptage.DecryptageAvecDeck(texteADecrypter,traducteur.stringToDeck(zoneDeck.getText()));
                 zoneTxtMotDecrypter.setText(resultat);
             });
 
@@ -142,15 +146,13 @@ public class test {
             });
             
 
-            
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public static int[] importDeck(JTextField zoneTxtMotCrypter){
         int[] decktempo=cryptage.genDeck();
-        String deckString=deckToString(decktempo);
+        String deckString=traducteur.deckToString(decktempo);
         zoneTxtMotCrypter.setText("");
         zoneTxtMotCrypter.setText(deckString);
 
@@ -158,25 +160,7 @@ public class test {
         return decktempo;
     }
 
-    public static String deckToString(int[] deck) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < deck.length; i++) {
-            sb.append(deck[i]);
-            if (i < deck.length - 1) {
-                sb.append(",");
-            }
-        }
-        return sb.toString();
-    }
-
-    public static int[] stringToDeck(String deckString) {
-        String[] parts = deckString.split(",");
-        int[] deck2 = new int[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            deck2[i] = Integer.parseInt(parts[i].trim());
-        }
-        return deck2;
-    }
+    
     
     
 }
