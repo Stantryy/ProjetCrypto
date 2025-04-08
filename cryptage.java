@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class cryptage {
-    public static String nomFichier="";
+    public static String nomFichier="log/";
 
     public static int[] etape5(int[] deck,int lMot) {
         deck=unAquatre(deck);
@@ -159,7 +159,7 @@ public class cryptage {
     public static String asciiToString(int[] mot) {
     StringBuilder m = new StringBuilder();
     for (int i = 0; i < mot.length; i++) {     
-        int charValue = mot[i] + 96;  // Correction : Ne pas modifier mot[i] directement
+        int charValue = mot[i] + 96;  
         m.append((char) charValue);
     }
     return m.toString();
@@ -190,16 +190,18 @@ public class cryptage {
 
     public static int[] cryptageMotUn(int[] motI,int clef[]) {
         for(int i=0;i<motI.length;i++){
-            motI[i]=motI[i]+clef[i];
+            motI[i] = (motI[i] + clef[i] - 1) % 26 + 1;
         }
+        
         afficheTabInt(motI,"mot crypté en ascii");
         return motI;
     }
     public static String inverseCryptageMotUn(int[] motCrypte, int clef[]) {
         String mot;
         for(int i=0;i<motCrypte.length;i++){
-            motCrypte[i]=motCrypte[i]-clef[i];
+            motCrypte[i] = (motCrypte[i] - clef[i] - 1 + 26) % 26 + 1;
         }
+        
         mot=asciiToString(motCrypte);
         return mot;
     }
@@ -233,7 +235,7 @@ public class cryptage {
     public static String CryptageAvecDeck(String mot,int[] deck) {  
         
         
-        nomFichier = mot.charAt(0)+"_Log.txt";
+        nomFichier = nomFichier+mot.charAt(0)+"_Log.txt";
         onLog("Mot à crypté:");
         onLog(mot);
         
@@ -260,6 +262,8 @@ public class cryptage {
         }
 
         public static String DecryptageAvecDeck(String mot ,int [] deck){
+        onLog("mot load :");
+        onLog(mot);
         int[] motI=stringtoAscii(mot);
    
 
