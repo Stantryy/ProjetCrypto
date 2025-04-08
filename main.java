@@ -4,30 +4,35 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class main {
+    public static String nomFichier="";
+
     public static int[] etape5(int[] deck,int lMot) {
         deck=unAquatre(deck);
         int n=0;
         int k;
         int[] clef = new int[lMot];
         boolean b =false;
-        System.out.println("debut étape 5");
+        onLog("debut étape 5");
         for(int i=0;i<lMot;i++){
-            System.out.println("lettre numero "+i);
+            onLog("lettre numero "+i);
             while(b==false){
                 k=deck[n];
                 afficheTabInt(deck,"etat deck");
-                System.out.println("valeur carte au dessus "+k);
+                onLog("valeur carte au dessus "+k);
                 if(k==53 || k==54){
-                    System.out.println("le joker 12345 ");
+                    onLog("le joker ");
                     deck=unAquatre(deck);
 
                 }
                 else{
                     clef[i]=deck[k]%26;
                     b=true;
-                    System.out.println("c'est bon lettre trouver pour la clef : "+clef[i] + " de base "+deck[k]);
+                    onLog("c'est bon lettre trouver pour la clef : "+clef[i] + " de base "+deck[k]);
                     if(i<lMot-1){
                         deck=unAquatre(deck);
                     }
@@ -64,34 +69,28 @@ public class main {
             i++;
         }  
 
-        
           int[] resultat = new int[deck.length];
             int j = 0;
 
-            // Copier les éléments après indiceJ2
             for (int k = indiceJ2 + 1; k < deck.length; k++) {
                 resultat[j] = deck[k];
                 j++;
             }
 
-            // Copier l'élément à indiceJ1
             resultat[j] = deck[indiceJ1];
             j++;
 
-            // Copier les éléments entre indiceJ1+1 et indiceJ2
             for (int k = indiceJ1 + 1; k < indiceJ2+1; k++) {
                 resultat[j] = deck[k];
                 j++;
             }
 
-            // Copier les éléments avant indiceJ1
             for (int k = 0; k < indiceJ1; k++) {
                 resultat[j] = deck[k];
                 j++;
             }
             afficheTabInt(resultat,"Double coupe :");
             return resultat;
-        
     }
     public static int[] simpleCoupe(int[] deck) {
         if(deck[deck.length-1]<=53){
@@ -122,6 +121,16 @@ public class main {
         
         
     }
+    public static void onLog(String texte) {
+    
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichier, true))) {
+            writer.write(texte);
+            writer.newLine(); // Ajoute une nouvelle ligne
+        } catch (IOException e) {
+            System.err.println("Une erreur s'est produite lors de l'écriture dans le fichier : " + e.getMessage());
+        }
+    }
+    
     
     public static int[] moveJoker(int[] deck,int aMove) {
         boolean b=true;
@@ -154,7 +163,7 @@ public class main {
         m.append((char) charValue);
     }
     return m.toString();
-}
+    }
 
 
     public static int[] stringtoAscii(String mot) {
@@ -165,7 +174,7 @@ public class main {
         }
         
         // Affichage du tableau ASCII
-        System.out.println("Tableau ASCII du mot :");
+        onLog("Tableau ASCII du mot :");
         for (int i=0;i<asciiValues.length;i++) {
             if(asciiValues[i]>=97 && asciiValues[i]<=122){
                 asciiValues[i]=asciiValues[i]-96;
@@ -196,11 +205,12 @@ public class main {
     }
 
     public static void afficheTabInt(int[] tab,String titre) {
-        System.out.println(titre);
+        onLog(titre);
+        String tabTempo="";
         for (int num : tab) {
-            System.out.print(num + " ");
+            tabTempo += Integer.toString(num)+" ";
         }
-        System.out.println("");
+        onLog(tabTempo);
 
     }
 
@@ -208,12 +218,14 @@ public class main {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Mot à crypté: ");
         String mot = scanner.nextLine();
-
+        
+        nomFichier = mot.charAt(0)+"_Log.txt";
+        onLog("Mot à crypté:");
+        onLog(mot);
         int[] motI=stringtoAscii(mot);
         List<Integer> liste = new ArrayList<>();
         for (int i = 0; i < 54; i++) {
             liste.add(i+1);
-            
         }
         
         Collections.shuffle(liste,new Random());
@@ -233,13 +245,18 @@ public class main {
 
         motI=cryptageMotUn(motI,clef);
         mot=asciiToString(motI);
-        System.out.println("mot crypté : "+mot);
+        onLog("mot crypté : "+mot);
+        System.out.println("mot Crypté :"+mot);
 
         afficheTabInt(deck2,"deck avant décryptage :");
         int[] clef2=etape5(deck2,motI.length);
         afficheTabInt(clef2,"La clef2 :");
         mot=inverseCryptageMotUn(motI,clef2);
+        onLog("mot décrypté : "+mot);
         System.out.println("mot décrypté : "+mot);
+        System.out.println("Détail à voir dans le fichier log : "+nomFichier);
+
 
         }
     }
+    
