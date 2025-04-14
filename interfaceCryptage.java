@@ -17,7 +17,7 @@ public class interfaceCryptage {
 
         try {
             // Charge l'image de fond
-            Image backgroundImage = ImageIO.read(new File("matix.jpg"));
+            Image backgroundImage = ImageIO.read(new File("fond.jpg"));
 
             // JPanel personnalisé pour afficher l'image
             JPanel backgroundPanel = new JPanel() {
