@@ -53,7 +53,6 @@ public class cryptage {
             writer.write(texte);
             writer.newLine(); // Ajoute une nouvelle ligne
         } catch (IOException e) {
-            //System.err.println("Une erreur s'est produite lors de l'écriture dans le fichier : " + e.getMessage());
         }
     }
     public static int[] genClef(String mot,int[] deck){
